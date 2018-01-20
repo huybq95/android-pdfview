@@ -47,9 +47,14 @@ class DecodingAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        decodeService = new DecodeServiceBase(new PdfContext());
-        decodeService.setContentResolver(pdfView.getContext().getContentResolver());
-        decodeService.open(uri);
+        try {
+            decodeService = new DecodeServiceBase(new PdfContext());
+            decodeService.setContentResolver(context.getContentResolver());
+            decodeService.open(uri);
+        } catch (RuntimeException rte) {
+            decodeService = null;
+            Log.e(TAG, "doInBackground: ", rte);
+        }
         return null;
     }
 
