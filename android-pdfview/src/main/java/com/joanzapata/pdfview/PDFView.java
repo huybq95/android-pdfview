@@ -641,19 +641,26 @@ public class PDFView extends SurfaceView {
 
     /** Called when the PDF is loaded */
     public void loadComplete(DecodeService decodeService) {
-        this.decodeService = decodeService;
-        this.documentPageCount = decodeService.getPageCount();
+        if (decodeService != null) {
+            this.decodeService = decodeService;
+            this.documentPageCount = decodeService.getPageCount();
 
-        // We assume all the pages are the same size
-        this.pageWidth = decodeService.getPageWidth(0);
-        this.pageHeight = decodeService.getPageHeight(0);
-        state = State.LOADED;
-        calculateOptimalWidthAndHeight();
+            // We assume all the pages are the same size
+            this.pageWidth = decodeService.getPageWidth(0);
+            this.pageHeight = decodeService.getPageHeight(0);
+            state = State.LOADED;
+            calculateOptimalWidthAndHeight();
 
-        // Notify the listener
-        jumpTo(defaultPage);
-        if (onLoadCompleteListener != null) {
-            onLoadCompleteListener.loadComplete(documentPageCount);
+            // Notify the listener
+            jumpTo(defaultPage);
+            if (onLoadCompleteListener != null) {
+                onLoadCompleteListener.loadComplete(documentPageCount);
+            }
+        } else {
+            jumpTo(defaultPage);
+            if (onLoadCompleteListener != null) {
+                onLoadCompleteListener.loadComplete(-1);
+            }
         }
     }
 
